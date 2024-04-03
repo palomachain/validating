@@ -19,20 +19,22 @@ async function get_local_data() {
             captureException(`CHECK IS SERVER IS UP: ${data}`);
         };
     } catch (err) {
-        captureException(err);
-        return null;
+        //captureException(err);
+        console.log(err);
+	return null;
     }
 }
 
 async function check_and_sync(local_data) {
     try {
-        if (local_data.ValidatorInfo.VotingPower) {
-            console.log(local_data.ValidatorInfo.VotingPower)
-            validating = local_data.ValidatorInfo.VotingPower > 0;
+        console.log(local_data);
+        if (local_data.validator_info.voting_power) {
+            console.log(local_data.validator_info.voting_power)
+            validating = local_data.validator_info.voting_power > 0;
         } else {
 
         }
-    } catch (err) {}
+    } catch (err) { console.log(err); }
 }
 
 async function main() {
