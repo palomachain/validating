@@ -30,10 +30,13 @@ let failure_count = 0;
 
 async function check_and_sync(local_data) {
   try {
-    console.log(local_data);
-    if (local_data.validator_info.voting_power) {
-      console.log(local_data.validator_info.voting_power);
-      validating = local_data.validator_info.voting_power > 0;
+    validating = true;
+
+    if (process.env.DISABLE_VOTE_POWER !== "true") {
+      if (local_data.validator_info.voting_power) {
+        console.log(local_data.validator_info.voting_power);
+        validating = local_data.validator_info.voting_power > 0;
+      }
     }
 
     if (local_data.sync_info.latest_block_time) {
