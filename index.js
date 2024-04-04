@@ -25,16 +25,34 @@ async function get_local_data() {
     }
 }
 
-async function check_and_sync(local_data) {
-    try {
-        console.log(local_data);
-        if (local_data.validator_info.voting_power) {
-            console.log(local_data.validator_info.voting_power)
-            validating = local_data.validator_info.voting_power > 0;
-        } else {
+let latest_block_time = null;
+let failure_count = 0;
 
+async function check_and_sync(local_data) {
+  try {
+    console.log(local_data);
+    if (local_data.validator_info.voting_power) {
+      console.log(local_data.validator_info.voting_power);
+      validating = local_data.validator_info.voting_power > 0;
+    }
+
+    if (local_data.sync_info.latest_block_time) {
+      if (latest_block_time === local_data.sync_info.latest_block_time) {
+        failure_count++;
+        if (failure_count >= 4) {
+          console.log(
+            "latest_block_time has remained the same for 4 consecutive checks"
+          );
+          validating = false;
         }
-    } catch (err) { console.log(err); }
+      } else {
+        latest_block_time = local_data.sync_info.latest_block_time;
+        failure_count = 0;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 async function main() {
